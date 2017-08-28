@@ -1,0 +1,6 @@
+*.pyc
+__pycache__/
+.cache/
+matchtube.egg-info/
+build/
+dist/
