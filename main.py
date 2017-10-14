@@ -23,7 +23,7 @@ def query_results(term, api_key, content='video', results=50, category=10, durat
 
 def video_results(video_ids, api_key, content='video', results=50, category=10, duration='any', order='relevance'):
     query = {
-        'id': video_ids,
+        'id': ','.join(video_ids),
         'part': 'snippet,statistics,contentDetails',
         'key': api_key,
     }
@@ -33,14 +33,8 @@ def video_results(video_ids, api_key, content='video', results=50, category=10, 
 
 
 search = query_results(term, api_key)
-print(search)
-exit()
 
-video_ids = str()
-for video in search['items']:
-    video_ids += video['id']['videoId'] + ','
-
-print(video_ids)
+video_ids = [video['id']['videoId'] for video in search['items']]
 
 gdata = video_results(video_ids, api_key)
 [print('{0}{1}'.format(x, '\n')) for x in gdata['items']]
