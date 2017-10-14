@@ -4,9 +4,9 @@ term = 'everybody'
 api_key = 'AIzaSyDHTKjtUchUxUOzCtYW4V_h1zzcyd0P6c0'
 
 
-def generate_query(term, api_key, content='video', results=50, category=10, duration='any', order='relevance'):
+def query_results(term, api_key, content='video', results=50, category=10, duration='any', order='relevance'):
     query = {
-        'part': 'id,snippet',
+        'part': 'id',
         'safeSearch': 'none',
         'maxResults': results,
         'type': content,
@@ -17,9 +17,30 @@ def generate_query(term, api_key, content='video', results=50, category=10, dura
         'order': order
     }
 
-    return query
+    gdata = pafy.call_gdata('search', query)
+    return gdata
 
 
-query = generate_query(term, api_key)
-gdata = pafy.call_gdata('search', query)
+def video_results(video_ids, api_key, content='video', results=50, category=10, duration='any', order='relevance'):
+    query = {
+        'id': video_ids,
+        'part': 'snippet,statistics,contentDetails',
+        'key': api_key,
+    }
+
+    gdata = pafy.call_gdata('videos', query)
+    return gdata
+
+
+search = query_results(term, api_key)
+print(search)
+exit()
+
+video_ids = str()
+for video in search['items']:
+    video_ids += video['id']['videoId'] + ','
+
+print(video_ids)
+
+gdata = video_results(video_ids, api_key)
 [print('{0}{1}'.format(x, '\n')) for x in gdata['items']]
