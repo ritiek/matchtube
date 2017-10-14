@@ -48,5 +48,5 @@ def fetch(term, content='video', results=50, category=10, duration='any', order=
     return results['items']
 
 
-results = fetch(term)
-[print('{0}{1}'.format(x, '\n')) for x in results]
+# results = fetch(term)
+# [print('{0}{1}'.format(x, '\n')) for x in results]
