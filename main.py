@@ -45,8 +45,8 @@ def fetch(term, content='video', results=50, category=10, duration='any', order=
     search = search_results(term, api_key, content, results, category, duration, order)
     video_ids = [video['id']['videoId'] for video in search['items']]
     results = video_results(video_ids, api_key)
-    return results
+    return results['items']
 
 
 results = fetch(term)
-[print('{0}{1}'.format(x, '\n')) for x in results['items']]
+[print('{0}{1}'.format(x, '\n')) for x in results]
