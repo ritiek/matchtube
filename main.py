@@ -12,37 +12,41 @@ api_key = 'AIzaSyDHTKjtUchUxUOzCtYW4V_h1zzcyd0P6c0'
 # ORDER:
 # date, rating, relevance, title, videocount, viewcount
 
-def search_results(term, api_key, content='video', results=50, category=10, duration='any', order='relevance'):
+
+def search_results(term, api_key, content, results, category, duration, order):
     query = {
-        'part': 'id',
-        'safeSearch': 'none',
-        'maxResults': results,
-        'type': content,
-        'key': api_key,
-        'videoCategoryId': 10,
-        'videoDuration': duration,
-        'q': term,
-        'order': order
+        'part'            : 'id',
+        'safeSearch'      : 'none',
+        'maxResults'      : results,
+        'type'            : content,
+        'key'             : api_key,
+        'videoCategoryId' : category,
+        'videoDuration'   : duration,
+        'q'               : term,
+        'order'           : order
     }
 
-    gdata = pafy.call_gdata('search', query)
-    return gdata
+    search = pafy.call_gdata('search', query)
+    return search
 
 
 def video_results(video_ids, api_key):
     query = {
-        'id': ','.join(video_ids),
-        'part': 'snippet,statistics,contentDetails',
-        'key': api_key,
+        'id'   : ','.join(video_ids),
+        'part' : 'snippet,statistics,contentDetails',
+        'key'  : api_key,
     }
 
-    gdata = pafy.call_gdata('videos', query)
-    return gdata
+    videos = pafy.call_gdata('videos', query)
+    return videos
 
 
-search = search_results(term, api_key)
+def fetch(term, content='video', results=50, category=10, duration='any', order='relevance', api_key=api_key):
+    search = search_results(term, api_key, content, results, category, duration, order)
+    video_ids = [video['id']['videoId'] for video in search['items']]
+    results = video_results(video_ids, api_key)
+    return results
 
-video_ids = [video['id']['videoId'] for video in search['items']]
-gdata = video_results(video_ids, api_key)
 
-# [print('{0}{1}'.format(x, '\n')) for x in gdata['items']]
+results = fetch(term)
+[print('{0}{1}'.format(x, '\n')) for x in results['items']]
